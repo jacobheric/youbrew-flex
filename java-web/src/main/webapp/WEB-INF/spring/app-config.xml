@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-2.0.4.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-2.5.xsd
+      http://www.springframework.org/schema/tx 
+      http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+      
+   <!-- Configurer that replaces ${...} placeholders with values from properties files -->
+   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+         <list>
+            <value>classpath:jdbc.properties</value>            
+         </list>
+      </property>
+   </bean>   
+   
+   <!-- Datasource used by Hibernate -->
+   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+      <property name="driverClassName"><value>${jdbc.driverClassName}</value></property>
+      <property name="url"><value>${jdbc.url}</value></property>
+      <property name="username"><value>${jdbc.username}</value></property>
+      <property name="password"><value>${jdbc.password}</value></property>
+   </bean>    
+   
+   <!-- Hibernate Session Factory -->
+   <bean id="sessionFactory"
+      class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+      <property name="dataSource" ref="dataSource" />
+      <property name="packagesToScan">
+         <list>
+            <value>com.jacobheric.youbrew.domain</value>
+         </list>
+      </property>
+      <property name="hibernateProperties">
+         <props>
+            <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+            <!-- Show SQL & make it legible -->
+            <!-- 
+            <prop key="hibernate.show_sql">true</prop>
+            <prop key="hibernate.format_sql">true</prop>
+            -->
+            <!-- You can probably use this to create you schema -->
+            <!--  
+            <prop key="hibernate.hbm2ddl.auto">create</prop>
+            -->           
+         </props>
+      </property>
+   </bean>
+
+   <!-- Transaction manager for a single Hibernate SessionFactory -->
+   <bean id="transactionManager"
+      class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      <property name="sessionFactory">
+         <ref bean="sessionFactory" />
+      </property>
+   </bean>
+   
+   <!--
+      Instruct Spring to perform declarative transaction management
+      automatically on annotated classes.
+   -->
+   <tx:annotation-driven />
+   
+	<!-- 
+		Enable annotation-based configuration. 
+	-->
+	<context:annotation-config />
+	<context:component-scan base-package="com.jacobheric" />
+
+	<!-- A secured implementation of ProductDAO 
+	<bean id="securedProductService" class="org.springframework.flex.samples.product.ProductDAO">
+		<constructor-arg ref="dataSource" />
+		<security:intercept-methods>
+			<security:protect method="find*" access="ROLE_USER" />
+		</security:intercept-methods>
+	</bean>
+   -->
+
+</beans>

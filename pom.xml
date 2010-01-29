@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   
+   <modelVersion>4.0.0</modelVersion>
+  
+   <groupId>com.jacobheric.youbrew</groupId>
+   <artifactId>YouBrew</artifactId>
+   
+    <properties>
+        <youbrew.version>1.0-SNAPSHOT</youbrew.version>
+        <spring.version>3.0.0.RELEASE</spring.version>
+        <flex.sdk.version>3.2.0.3958</flex.sdk.version>
+        <blazeds.version>3.2.0.3978</blazeds.version>
+        <flex-mojos.version>3.5.0</flex-mojos.version>
+        <flex-mojos-unit.version>3.3.0</flex-mojos-unit.version>        
+    </properties>  
+       
+   <name>YouBrew</name>
+   <version>${youbrew.version}</version>
+   <description>Homebrew Manager Application</description>
+   <packaging>pom</packaging> 
+      
+   <!-- I recommend you move these to settings.xml after you've gotten started. -->
+   <repositories>
+       <repository>
+           <id>flex-mojos-repository</id>
+           <url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+           <releases> <enabled>true</enabled> </releases>
+           <snapshots> <enabled>false</enabled> </snapshots>
+       </repository>
+   </repositories>
+   <pluginRepositories>
+       <pluginRepository>
+           <id>local</id>
+           <url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+           <releases> <enabled>true</enabled> </releases>
+           <snapshots> <enabled>false</enabled> </snapshots>
+       </pluginRepository>
+   </pluginRepositories> 
+   
+   
+   <!-- See module poms for more detail. -->
+   <modules>
+      <module>flex</module>
+      <module>java-web</module>      
+   </modules>
+    
+</project>

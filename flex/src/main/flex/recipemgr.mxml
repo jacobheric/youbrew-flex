@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*"
+	creationComplete="creationCompleteHandler();initLogging();">
+
+	<mx:Script>
+		<![CDATA[
+
+         <!--add some logging -->
+         import mx.collections.ArrayCollection;
+         import mx.logging.targets.*;
+         import mx.logging.*; 
+                 
+			import mx.rpc.events.FaultEvent;
+			import mx.controls.Alert;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] private var recipes:ArrayCollection;
+			[Bindable] private var yeasts:ArrayCollection;
+			
+        private function initLogging():void {
+            // Create a target.
+            var logTarget:TraceTarget = new TraceTarget();
+
+            // Log only messages for the classes in the mx.rpc.* and 
+            // mx.messaging packages.
+            logTarget.filters=["mx.rpc.*","mx.messaging.*"];
+
+            // Log all log levels.
+            logTarget.level = LogEventLevel.ALL;
+
+            // Add date, time, category, and log level to the output.
+            logTarget.includeDate = true;
+            logTarget.includeTime = true;
+            logTarget.includeCategory = true;
+            logTarget.includeLevel = true;
+
+            // Begin logging.
+            Log.addTarget(logTarget);
+        }			
+
+			private function creationCompleteHandler():void
+			{
+				roYeast.findAll();
+			}
+
+			private function recipe_findByName_resultHandler(event:ResultEvent):void
+			{
+				recipes = event.result as ArrayCollection
+			}
+
+			private function yeast_findAll_resultHandler(event:ResultEvent):void
+			{
+				yeasts = event.result as ArrayCollection
+			}
+
+			private function faultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.faultDetail);
+			}
+
+			public function openRecipe(recipe:Recipe):void
+			{
+				var children:Array = tn.getChildren();
+				for (var i:int = 0; i<children.length; i++)
+				{
+					if (RecipeForm(children[i]).recipe.id == recipe.id)
+					{
+						tn.selectedChild = children[i];
+						return;
+					}
+				}
+				
+				var form:RecipeForm = new RecipeForm();
+				form.addEventListener(RecipeEvent.CREATED, recipeCreatedHandler);
+				form.addEventListener(RecipeEvent.UPDATED, recipeUpdatedHandler);
+				form.addEventListener(RecipeEvent.DELETED, recipeDeletedHandler);
+				tn.addChild(form);
+				form.recipe = recipe;
+				form.yeasts = yeasts;
+				tn.selectedChild = form;
+			}
+
+			private function search():void
+			{
+				roRecipe.findByName(searchStr.text);
+			}
+
+			private function recipeCreatedHandler(event:RecipeEvent):void
+			{
+				search();				
+			}
+
+			private function recipeUpdatedHandler(event:RecipeEvent):void
+			{
+				search();				
+			}
+
+			private function recipeDeletedHandler(event:RecipeEvent):void
+			{
+				tn.removeChild(event.target as RecipeForm);
+				search();				
+			}
+
+		]]>
+	</mx:Script>
+
+	<mx:RemoteObject id="roRecipe" destination="recipeService">
+		<mx:method name="findByName" result="recipe_findByName_resultHandler(event)"/>
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="roYeast" destination="yeastService">
+		<mx:method name="findAll" result="yeast_findAll_resultHandler(event)"/>
+	</mx:RemoteObject>
+
+	<mx:ApplicationControlBar width="100%">
+		<mx:TextInput id="searchStr"/>
+		<mx:Button label="Search" click="search()"/>
+		<mx:Button label="New Recipe" click="openRecipe(new Recipe())"/>
+	</mx:ApplicationControlBar>
+
+	<mx:HDividedBox width="100%" height="100%">
+		<mx:DataGrid id="dg" dataProvider="{recipes}" width="30%" height="100%"
+			doubleClickEnabled="true"
+			doubleClick="openRecipe(dg.selectedItem as Recipe)">
+			<mx:columns>
+				<mx:DataGridColumn dataField="name" headerText="Name"/>
+				<mx:DataGridColumn dataField="brewNotes" headerText="Notes"/>
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:TabNavigator id="tn" width="70%" height="100%"/>
+	</mx:HDividedBox>
+
+</mx:Application>

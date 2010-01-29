@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>com.jacobheric.youbrew</groupId>
+      <artifactId>YouBrew</artifactId>
+      <version>${youbrew.version}</version>
+   </parent>
+
+   <name>You Brew: your brew day management software.</name>
+   <groupId>com.jacobheric.youbrew</groupId>   
+	<artifactId>youbrew-flex</artifactId>
+   <version>${youbrew.version}</version>
+	<packaging>swf</packaging>
+
+	<build>  
+		<sourceDirectory>src/main/flex</sourceDirectory>
+		<testSourceDirectory>src/test/flex</testSourceDirectory>   
+		<plugins>
+         <plugin>
+            <groupId>org.sonatype.flexmojos</groupId>
+            <artifactId>flexmojos-maven-plugin</artifactId>
+            <version>${flex-mojos.version}</version>
+            <extensions>true</extensions>
+            
+            <!-- 
+              This doesn't really work, so it has been commented out remains for 
+              intermittent, manual generation of adobe html/javascript wrappers for 
+              compiled swfs.
+              It should work like this (see External Project Wrapping):  
+                 https://docs.sonatype.org/display/FLEXMOJOS/Html+Wrapper+Mojo
+             
+              TODO: Get war project wrappings working, leaving config info here and
+              invoking wrapper from war project.
+            
+            --> 
+            
+            <configuration>                      
+               <parameters>
+                  <swf>${project.artifactId}-${youbrew.version}</swf>
+                  <title>You Brew your own software</title>
+               </parameters>            
+               <outputDirectory>${basedir}/../java-web/src/main/webapp/</outputDirectory>
+               <services>${basedir}/../java-web/src/main/webapp/WEB-INF/flex/services-config.xml</services>               
+               <htmlName>index</htmlName>
+               <contextRoot>/</contextRoot>
+               <locales>
+                  <locale>en_US</locale>
+               </locales>
+               <configurationReport>true</configurationReport> 
+            </configuration>                       
+            <!--
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>wrapper</goal>  
+                     <goal>copy-flex-resources</goal>                 
+                  </goals>                 
+               </execution>
+            </executions>
+            -->
+           
+
+         </plugin> 
+		</plugins>
+	</build>
+   
+  <dependencies>
+
+    <dependency>
+      <groupId>com.adobe.flex.framework</groupId>
+      <artifactId>flex-framework</artifactId>
+      <version>${flex.sdk.version}</version>
+      <type>pom</type>
+    </dependency>
+
+        <!-- flexmojos Unit testing support -->
+    <dependency>
+      <groupId>org.sonatype.flexmojos</groupId>
+      <artifactId>flexmojos-unittest-support</artifactId>
+      <version>${flex-mojos-unit.version}</version>
+      <type>swc</type>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>   
+
+</project>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	backgroundColor="#FFFFFF"
+	label="{recipe.id>0?recipe.name:'New Recipe'}" xmlns:local="*">
+
+	<mx:Metadata>
+        [Event(name="recipeCreated", type="RecipeEvent")]
+        [Event(name="recipeUpdated", type="RecipeEvent")]
+        [Event(name="recipeDeleted", type="RecipeEvent")]
+    </mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+
+		import mx.collections.ArrayCollection;
+		import mx.rpc.events.FaultEvent;
+		import mx.rpc.events.ResultEvent;
+		import mx.controls.Alert;
+		
+		[Bindable] public var recipe:Recipe;
+		[Bindable] public var yeasts:ArrayCollection;
+
+		private function save():void
+		{
+			recipe.name = recipeName.text;
+			recipe.start = new Date(2010, 01, 15, 1, 20);
+			recipe.end = new Date(2010, 01, 15, 1, 20);
+			recipe.brewNotes = brewNotes.text;
+			recipe.tasteNotes = tasteNotes.text;
+			recipe.yeast = yeast.selectedItem as Yeast;
+			if (recipe.id == 0)
+			{
+				ro.insert(recipe);	
+			}
+			else
+			{
+				ro.update(recipe);
+			}
+		}
+
+		private function deleteItem():void
+		{
+			ro.remove(recipe);		
+		}
+
+		private function create_resultHandler(event:ResultEvent):void
+		{
+			recipe.id = event.result.id;
+			dispatchEvent(new RecipeEvent(RecipeEvent.CREATED, recipe));			
+		}
+
+		private function update_resultHandler(event:ResultEvent):void
+		{
+			dispatchEvent(new RecipeEvent(RecipeEvent.UPDATED, recipe));			
+		}
+
+		private function remove_resultHandler(event:ResultEvent):void
+		{
+			dispatchEvent(new RecipeEvent(RecipeEvent.DELETED, recipe));			
+		}
+		
+		private function faultHandler(event:FaultEvent):void
+		{
+			Alert.show(event.fault.faultDetail);
+		}
+		
+			
+		]]>
+	</mx:Script>
+	
+	<mx:RemoteObject id="ro" destination="recipeService">
+		<mx:method name="create" result="create_resultHandler(event)"/>
+		<mx:method name="update" result="update_resultHandler(event)"/>
+		<mx:method name="remove" result="remove_resultHandler(event)"/>
+	</mx:RemoteObject>
+	
+	<mx:Form>
+		<mx:FormItem label="Id">
+			<mx:TextInput text="{recipe.id}" enabled="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Name">
+			<mx:TextInput id="recipeName" text="{recipe.name}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Yeast">
+			<local:ComboBox id="yeast" dataProvider="{yeasts}" labelField="name" valueField="id" value="{recipe.yeast.id}"/>
+		</mx:FormItem>
+		
+      <!--		
+      <mx:Label id="selection" color="0x323232" text="Start Time:" />
+      
+      <mx:DateField id="dateField1" yearNavigationEnabled="true"
+          change="dateChanged(DateField(event.target).selectedDate)" color="0x000000"/>	
+          	
+
+		<mx:FormItem label="Start Time">
+			<mx:TextInput id="start" text="{recipe.start}"/>
+		</mx:FormItem>
+		<mx:FormItem label="End Time">
+			<mx:TextInput id="end" text="{recipe.end}"/>
+		</mx:FormItem>
+		-->
+		<mx:FormItem label="Brew Notes">
+			<mx:TextInput id="brewNotes" text="{recipe.brewNotes}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Taste Notes">
+			<mx:TextInput id="tasteNotes" text="{recipe.tasteNotes}"/>
+		</mx:FormItem>
+	</mx:Form>
+
+	<mx:HBox left="8" bottom="8">
+		<mx:Button label="Close" click="parent.removeChild(this)"/>
+		<mx:Button label="Save" click="save()"/>
+		<mx:Button label="Delete" click="deleteItem()"/>
+	</mx:HBox>
+	
+</mx:Canvas>
