@@ -16,5 +16,5 @@ TODOs:
 1.  Get unit tests setup & working on both flex & java side.
 2.  Get mvn jetty:run working in parent pom (http://docs.codehaus.org/display/JETTY/Multiple+WebApp+Source+Directory 
        should work, but it doesn't).
-3.  Learn Flex best practices & organize the flex sources.
+3.  Learn Flex best practices & organize the flex sources (implement mvc for flex).
 4.  Exercise spring-security integration with flex views.
