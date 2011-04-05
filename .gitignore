@@ -3,7 +3,12 @@
 
 .classpath
 .DS_Store
+*.ipr
+*.iml
+*.iws
+.idea
 .project
 .settings
 target/
 *.log
+

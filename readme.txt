@@ -7,7 +7,7 @@ Instruction to build & run (assuming you've got the sources downloaded).
 1.  Create db schema.  You can try playing with the hibernate.hbm2ddl.auto propery in app-config.xml
        or run the ddl script in this folder.  Make sure you update the db credentials in jdbc.properties.
        
-2.  In the project root, run:  mvn install;
+2.  In the project root, run:  mvn install
 
 3.  In ./java-web run: mvn jetty:run-war
 

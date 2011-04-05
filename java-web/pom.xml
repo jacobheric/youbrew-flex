@@ -8,13 +8,13 @@
    <parent>
       <groupId>com.jacobheric.youbrew</groupId>
       <artifactId>YouBrew</artifactId>
-      <version>${youbrew.version}</version>
+      <version>1.0-SNAPSHOT</version>
    </parent>   
 
    <name>youbrew-java-web</name> 
    <groupId>com.jacobheric.youbrew</groupId> 
    <artifactId>youbrew-java-web</artifactId>
-   <version>${youbrew.version}</version>   
+   <version>1.0-SNAPSHOT</version>   
    <packaging>war</packaging>      
    
    <build>    
@@ -38,46 +38,51 @@
                The wrapper goal should work, but it doesn't.  This is the correct way to 
                wrap & copy flex resources.
                TODO:  revisit & fix.
-            -->           
+            -->          
             
             <configuration>     
                <wrapperArtifact>
                   <groupId>com.jacobheric.youbrew</groupId>
                   <artifactId>youbrew-flex</artifactId>
-                  <version>${youbrew.version}</version>                    
+                  <version>1.0-SNAPSHOT</version>                    
                </wrapperArtifact>
                <configurationReport>true</configurationReport>                 
             </configuration>   
             <executions>
                <execution>
                   <goals>
-                     <!--<goal>wrapper</goal>-->    
+                     <goal>wrapper</goal>    
                      <goal>copy-flex-resources</goal>                                      
                   </goals>                 
                </execution>
             </executions>
+
              
          </plugin>         
          
          <plugin>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>maven-jetty-plugin</artifactId>
+			 <version>6.1.10</version>
             <configuration>
-            <webAppConfig>
-               <contextPath>/</contextPath>
-            </webAppConfig>              
-            <scanIntervalSeconds>10</scanIntervalSeconds>
-            <connectors>
-               <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                 <port>8080</port>
-                 <maxIdleTime>60000</maxIdleTime>
-               </connector>
-            </connectors>
+			   <stopPort>53889</stopPort>
+			   <stopKey>killit</stopKey>
+				<webAppConfig>
+				   <contextPath>/</contextPath>
+				</webAppConfig>
+				<scanIntervalSeconds>10</scanIntervalSeconds>
+				<connectors>
+				   <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+					 <port>8080</port>
+					 <maxIdleTime>60000</maxIdleTime>
+				   </connector>
+				</connectors>
             </configuration>
          </plugin>
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>tomcat-maven-plugin</artifactId>
+			<version>1.0-beta-1</version> 
             <configuration>
                <path>/</path>
             </configuration>

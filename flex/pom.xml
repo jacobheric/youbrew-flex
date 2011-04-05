@@ -7,13 +7,13 @@
    <parent>
       <groupId>com.jacobheric.youbrew</groupId>
       <artifactId>YouBrew</artifactId>
-      <version>${youbrew.version}</version>
+      <version>1.0-SNAPSHOT</version>
    </parent>
 
    <name>You Brew: your brew day management software.</name>
    <groupId>com.jacobheric.youbrew</groupId>   
 	<artifactId>youbrew-flex</artifactId>
-   <version>${youbrew.version}</version>
+    <version>${youbrew.version}</version>
 	<packaging>swf</packaging>
 
 	<build>  
